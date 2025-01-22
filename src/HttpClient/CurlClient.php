@@ -35,12 +35,13 @@ class CurlClient implements HttpClientInterface
 
     public function request($uri, $method = 'GET', array $headers = array(), array $data = array())
     {
-        $data = http_build_query($data, '', '&');
-
         if ('GET' === $method) {
+            $data = http_build_query($data, '', '&');
             $curlOptions[\CURLOPT_HTTPGET] = true;
             $curlOptions[\CURLOPT_URL] = $uri . '?' . $data;
         } elseif ('POST' === $method) {
+            array_push($headers, 'Content-Type: application/json');
+            $data = json_encode($data);
             $curlOptions[\CURLOPT_POST] = true;
             $curlOptions[\CURLOPT_URL] = $uri;
             $curlOptions[\CURLOPT_POSTFIELDS] = $data;
